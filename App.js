@@ -1,20 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
-export default function App() {
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Text } from 'react-native';
+import { OTPVerification } from '@msg91comm/react-native-sendotp';
+import Modal from 'react-native-modal';
+
+const App = () => {
+  const [isModalVisible, setModalVisible] = useState(true);
+
+  const handleLoginWithOTP = () => {
+    setModalVisible(true);
+  };
+
+  const handleOTPCompletion = (data) => {
+    console.log(data);
+    setModalVisible(false);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={{ flex: 1 }}>
+      <TouchableOpacity onPress={handleLoginWithOTP} style={{ padding: 16 }}>
+        <Text style={{ fontSize: 18 }}>Login with OTP</Text>
+      </TouchableOpacity>
+      <Modal
+        style={{
+          backgroundColor: '#fff',
+          margin: 0,
+        }}
+        isVisible={isModalVisible}
+      >
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+          <OTPVerification
+            onVisible={isModalVisible}
+            onCompletion={handleOTPCompletion}
+            authToken={'ENTER_YOUR_AUTHTOKEN'}
+            widgetId={'ENTER_YOUR_WIDGETID'}
+          />
+        </View>
+      </Modal>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
